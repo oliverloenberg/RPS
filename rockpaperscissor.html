@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      //For the computer, return a random value between rock, paper or scissor
+      function computerPlay() {
+        //Come up with a random number and make sure it is either 1, 2 or 3.
+        let luckyNumber = Math.floor(Math.random() * 3);
+        //return a value of either, rock, paper or scissor
+        switch (luckyNumber) {
+          //0 = rock
+          case 0:
+            return "rock";
+            //*console.log("Rock!");
+            break;
+          //1 = paper
+          case 1:
+            return "paper";
+            //*console.log("Paper!");
+            break;
+          //2 = scissor
+          case 2:
+            return "scissor";
+            //*console.log("Scissor!");
+            break;
+        }
+      }
+      //Let the player input their own choice of value and store it. They can input in all caps or a mix, in the end it will be converted to lower case. Check if the player enters a valid choice
+      function playerSelection() {
+        let playerChoiceLower;
+
+        let playerChoice = prompt(
+          "What do you choose, rock, paper or scissor?",
+          "Enter choice here"
+        );
+
+        if (playerChoice != null) {
+          playerChoiceLower = playerChoice.toLowerCase();
+        } else {
+          return alert("Not in the mood anyway? Fair enough :)");
+        }
+
+        if (
+          playerChoiceLower === "rock" ||
+          playerChoiceLower === "paper" ||
+          playerChoiceLower === "scissor"
+        ) {
+          alert("Thanks for choosing, here comes the result!");
+          return playerChoiceLower;
+        } else {
+          alert("Thats not a valid choice, try again.");
+        }
+      }
+
+      //Compare these two values and evaluate who wins, and return who the winner is.
+      function playRound(playerChoice, compChoice) {
+        let playerPoints = `Player gets a point!`;
+        let computerPoints = `Computer gets a point!`;
+        let tieEvent = `It is a tie!`;
+        let playerNotWilling = `Player did not want to play!`;
+
+        if (
+          (playerChoice === "rock" && compChoice === "scissor") ||
+          (playerChoice === "paper" && compChoice === "rock") ||
+          (playerChoice === "scissor" && compChoice === "paper")
+        ) {
+          alert(
+            `Player wins! Player chose ${playerChoice} and Computer chose ${compChoice}`
+          );
+          return playerPoints;
+        }
+
+        if (
+          (playerChoice === "rock" && compChoice === "paper") ||
+          (playerChoice === "paper" && compChoice === "scissor") ||
+          (playerChoice === "scissor" && compChoice === "rock")
+        ) {
+          alert(
+            `Computer wins! Player chose ${playerChoice} and Computer chose ${compChoice}`
+          );
+          return computerPoints;
+        }
+
+        if (playerChoice === compChoice) {
+          alert(
+            `Its a tie! Player chose ${playerChoice} and Computer chose ${compChoice}`
+          );
+          return tieEvent;
+        }
+
+        if (playerChoice == null) {
+          return playerNotWilling;
+        }
+        //If the player doesn't fill anything out in the prompt field, run player selection again -THIS BREAKS IF YOU FILL OUT SOMETHING WRONG ON 2nd attempt!
+        else {
+          playerSelection();
+        }
+      }
+
+      //Lets figure out who won
+      //Collect the points
+      //Compare the points between the player, the computer and how many tie events occured
+      //return the result
+      function determineWinner(playerPoints, computerPoints, tieEvent) {
+        if (playerPoints > computerPoints) {
+          alert(
+            `The player is the winner with ${playerPoints} points compared to the Computer with only ${computerPoints} points. There were ${tieEvent} tie events.`
+          );
+        } else if (computerPoints > playerPoints) {
+          alert(
+            `The Computer is the winner with ${computerPoints} points compared to the Player with only ${playerPoints} points. There were ${tieEvent} tie events.`
+          );
+        } else if (playerPoints == computerPoints) {
+          alert(
+            `It's a deadon tie! Player got ${playerPoints} points, and Computer got ${computerPoints} points. There were ${tieEvent} tie events.`
+          );
+        } else {
+          alert(`Something went horribly wrong.`);
+        }
+      }
+
+      //Play again
+      function playAgain() {
+        let answer = confirm("Want to play again?");
+
+        if (answer == true) {
+          game();
+        } else {
+          alert("Thanks for playing!");
+        }
+      }
+      //Play 3 rounds
+      function game() {
+        //Initialize scoring
+        let playerPoints = 0;
+        let computerPoints = 0;
+        let tieEvent = 0;
+        let playerConsent;
+
+        for (i = 0; i < 3; i++) {
+          //play a round and add whoever got points to the variables above:
+          switch (playRound(playerSelection(), computerPlay())) {
+            case "Player gets a point!":
+              playerPoints++;
+              break;
+
+            case "Computer gets a point!":
+              computerPoints++;
+              break;
+
+            case "It is a tie!":
+              tieEvent++;
+              break;
+
+            case "Player did not want to play!":
+              i = 4;
+              break;
+          }
+        }
+
+        //Check if the player wanted to play at all, and if not, abort, otherwise Collect all the results and announce the winner
+        playerPoints === 0 && computerPoints === 0 && tieEvent === 0
+          ? (playerConsent = false)
+          : determineWinner(playerPoints, computerPoints, tieEvent);
+
+        //Ask player if they want to play again, if they havn't clicked the cancel button
+        playerConsent == false
+          ? console.log("Player did not want to play!")
+          : playAgain();
+      }
+
+      game();
+    </script>
+  </body>
+</html>

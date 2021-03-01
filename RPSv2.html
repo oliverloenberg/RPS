@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header><h1>Lets play rock paper scissor!</h1></header>
+    <main>
+      <header class="gameInstruction">
+        <h3>Click on your weapon of choice and the game will start</h3>
+        <p>A game is best of 5 rounds</p>
+      </header>
+      <section class="choiceButtons">
+        <button id="rock"><img src="images/rock.png" alt="" /></button>
+        <button id="paper"><img src="images/paper.png" alt="" /></button>
+        <button id="scissor"><img src="images/scissor.png" alt="" /></button>
+      </section>
+      <section>
+        <p class="roundResultAnnounce">
+          You chose <span class="playerChoiceTxt">playerChoice</span> and
+          computer chose <span class="computerChoiceTxt">computerChoice</span>.
+          <span class="roundWinnerTxt">roundWinner</span> won!
+        </p>
+      </section>
+      <section class="roundRecap">
+        <p class="rRecapPlayer">Player</p>
+        <div class="playerChoice">
+          <img src="images/rock.png" alt="" id="pChoiceImage" />
+        </div>
+        <p class="rRecapComputer">Computer</p>
+        <div class="computerChoice">
+          <img src="images/rock.png" alt="" id="cChoiceImage" />
+        </div>
+        <div class="roundsPlayed">
+          <h3>Rounds played:</h3>
+          <h3><span class="roundsPlayedNumber">0</span></h3>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <header class="footerHeader">
+        <h3>Scoring</h3>
+        <p class="gameResultAnnounce">
+          Player won <span class="insertPlayerScore"></span> rounds and computer
+          won <span class="insertComputerScore"></span> rounds. There were
+          <span class="numOfTies"></span> ties.
+          <span class="announceGameWinner"></span> wins the game!
+        </p>
+      </header>
+      <section class="playerLabel"><h4>Player score</h4></section>
+      <section class="playerScore"><h2>0</h2></section>
+      <section class="computerLabel"><h4>Computer score</h4></section>
+      <section class="computerScore"><h2>0</h2></section>
+    </footer>
+
+    <script>
+      //We need to grab all the buttons so we can put an event listener on them
+      const buttons = document.querySelectorAll("button");
+      let playerChoice = "";
+      let playerScore = 0;
+      let computerChoice = "";
+      let computerScore = 0;
+      let roundWinner = "";
+      let roundsPlayed = 0;
+      let gameWinner = "";
+      let numOfTies = 0;
+      let showingResult = false;
+      buttons.forEach((button) => {
+        button.addEventListener("click", function playerSelection() {
+          playerChoice = button.id;
+          const pChoiceText = document.querySelector(".playerChoiceTxt");
+          pChoiceText.textContent = `${playerChoice}`;
+          console.log(playerChoice);
+        });
+
+        ///Listener that activates the computer selection function
+        button.addEventListener("click", function () {
+          computerSelection();
+          const cChoiceText = document.querySelector(".computerChoiceTxt");
+          cChoiceText.textContent = `${computerChoice}`;
+        });
+        ///Listener that makes an anonymous function, which calls the playRound function but is able to pass its arguments (which in this case are the globally saved variables playerChoice and computerChoice)
+        button.addEventListener("click", function () {
+          playRound(playerChoice, computerChoice);
+          const rWinnerTxt = document.querySelector(".roundWinnerTxt");
+          rWinnerTxt.textContent = `${roundWinner}`;
+        });
+
+        ///increment the round variable
+        button.addEventListener("click", roundCounter);
+
+        ///Listener that will change images in the round recap section
+        button.addEventListener("click", changeImages);
+
+        ///Update the score counter so the user can follow how many rounds they have won in a game
+        button.addEventListener("click", scoreUpdater);
+
+        ///We want to check if 5 rounds have been played and who won the most
+        button.addEventListener("click", checkGameStatus);
+      });
+
+      //For the computer, return a random value between rock, paper or scissor
+      function computerSelection() {
+        //Come up with a random number and make sure it is either 1, 2 or 3.
+        let luckyNumber = Math.floor(Math.random() * 3);
+        //return a value of either, rock, paper or scissor
+        switch (luckyNumber) {
+          //0 = rock
+          case 0:
+            computerChoice = "rock";
+            console.log(`Computer chooses ${computerChoice}`);
+            return "rock";
+            break;
+          //1 = paper
+          case 1:
+            computerChoice = "paper";
+            console.log(`Computer chooses ${computerChoice}`);
+            return "paper";
+            break;
+          //2 = scissor
+          case 2:
+            computerChoice = "scissor";
+            console.log(`Computer chooses ${computerChoice}`);
+            return "scissor";
+            break;
+        }
+      }
+
+      //When we know what the choices are we need to evaluate who won the round
+      function playRound(playerChoice, computerChoice) {
+        if (
+          (playerChoice === "rock" && computerChoice === "scissor") ||
+          (playerChoice === "paper" && computerChoice === "rock") ||
+          (playerChoice === "scissor" && computerChoice === "paper")
+        ) {
+          console.log(
+            `Player wins! Player chose ${playerChoice} and Computer chose ${computerChoice}`
+          );
+          roundWinner = "Player";
+          playerScore++;
+        } else if (
+          (playerChoice === "rock" && computerChoice === "paper") ||
+          (playerChoice === "paper" && computerChoice === "scissor") ||
+          (playerChoice === "scissor" && computerChoice === "rock")
+        ) {
+          console.log(
+            `Computer wins! Player chose ${playerChoice} and Computer chose ${computerChoice}`
+          );
+          roundWinner = "Computer";
+          computerScore++;
+        } else if (
+          playerChoice === computerChoice &&
+          playerChoice !== "" &&
+          computerChoice !== ""
+        ) {
+          console.log("It's a tie!");
+          roundWinner = "It's a tie! Nobody";
+          numOfTies++;
+        } else {
+          console.log("No choices have been made yet");
+        }
+      }
+
+      ///We need to change images based on what the player clicked on and what the computer rolled
+      function changeImages() {
+        ///for the player
+        const pChoiceImg = document.querySelector("#pChoiceImage");
+        const pChoice = document.querySelector(".playerChoice");
+        if (playerChoice === "rock") {
+          pChoiceImg.src = "images/rock.png";
+        } else if (playerChoice === "paper") {
+          pChoiceImg.src = "images/paper.png";
+        } else {
+          pChoiceImg.src = "images/scissor.png";
+        }
+        ///for the computer
+        const cChoiceImg = document.querySelector("#cChoiceImage");
+        if (computerChoice === "rock") {
+          cChoiceImg.src = "images/rock.png";
+        } else if (computerChoice === "paper") {
+          cChoiceImg.src = "images/paper.png";
+        } else {
+          cChoiceImg.src = "images/scissor.png";
+        }
+      }
+
+      ///keep the round counter updated after each round
+      function roundCounter() {
+        roundsPlayed++;
+        const rPlayedNumber = document.querySelector(".roundsPlayedNumber");
+        rPlayedNumber.textContent = `${roundsPlayed}`;
+      }
+
+      //keep the player and computer score updated after each round
+      function scoreUpdater() {
+        const pScore = document.querySelector(".playerScore h2");
+        pScore.textContent = `${playerScore}`;
+
+        const cScore = document.querySelector(".computerScore h2");
+        cScore.textContent = `${computerScore}`;
+      }
+
+      ///Check if there's been played 5 rounds and who got most points
+      function checkGameStatus() {
+        toggleShowResult();
+        if (roundsPlayed % 5 === 0 && playerScore > computerScore) {
+          gameWinner = "Player";
+          newGameSetup();
+        } else if (roundsPlayed % 5 === 0 && computerScore > playerScore) {
+          gameWinner = "Computer";
+          newGameSetup();
+        } else if (roundsPlayed % 5 === 0 && playerScore === computerScore) {
+          gameWinner = "No one";
+          newGameSetup();
+        } else {
+          console.log("No winner determined yet!");
+        }
+      }
+
+      ///As we don't want to show who won last game for the whole duration of the current game, make it a toggle
+      function toggleShowResult() {
+        const revealRoundResult = document.querySelector(
+          ".roundResultAnnounce"
+        );
+        revealRoundResult.style.opacity = "1";
+        revealRoundResult.classList.toggle("roundResultTransition");
+
+        if (showingResult === true) {
+          const revealGameResult = document.querySelector(
+            ".gameResultAnnounce"
+          );
+          revealGameResult.style.opacity = "0";
+          revealGameResult.classList.toggle("gameResultTransition");
+          showingResult = false;
+        } else {
+        }
+      }
+
+      ///We want to keep the user updated textually on who won the game and with how many points
+      function insertResults() {
+        const pScore = document.querySelector(".insertPlayerScore");
+        pScore.textContent = `${playerScore}`;
+        const cScore = document.querySelector(".insertComputerScore");
+        cScore.textContent = `${computerScore}`;
+        const ties = document.querySelector(".numOfTies");
+        ties.textContent = `${numOfTies}`;
+        const showWinner = document.querySelector(".announceGameWinner");
+        showWinner.textContent = `${gameWinner}`;
+      }
+
+      ///We don't want to clutter the interface with who won until we actually have the result
+      function showResult() {
+        const revealResult = document.querySelector(".gameResultAnnounce");
+        revealResult.style.opacity = "1";
+        showingResult = true;
+      }
+      ///Since we display scores for each game we need to reset them after 5 rounds have been played
+      function resetScores() {
+        playerScore = 0;
+        computerScore = 0;
+        numOfTies = 0;
+      }
+      ///To avoid too much repetition in code lets gather some functions together
+      function newGameSetup() {
+        insertResults();
+        showResult();
+        resetScores();
+      }
+    </script>
+  </body>
+</html>
