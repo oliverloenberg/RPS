@@ -1,3 +1,4 @@
+<!-- Please note this project is not meant to be responsive, yet. -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -109,27 +110,27 @@
 
       //For the computer, return a random value between rock, paper or scissor
       function computerSelection() {
-        //Come up with a random number and make sure it is either 1, 2 or 3.
+        //Come up with a random number and make sure it is either 0, 1 or 2.
         let luckyNumber = Math.floor(Math.random() * 3);
         //return a value of either, rock, paper or scissor
         switch (luckyNumber) {
-          //0 = rock
           case 0:
             computerChoice = "rock";
             console.log(`Computer chooses ${computerChoice}`);
             return "rock";
             break;
-          //1 = paper
           case 1:
             computerChoice = "paper";
             console.log(`Computer chooses ${computerChoice}`);
             return "paper";
             break;
-          //2 = scissor
           case 2:
             computerChoice = "scissor";
             console.log(`Computer chooses ${computerChoice}`);
             return "scissor";
+            break;
+          default:
+            console.log(`${luckyNumber}`);
             break;
         }
       }
